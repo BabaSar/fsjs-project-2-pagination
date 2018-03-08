@@ -17,7 +17,7 @@ paginationLinksNum = Math.ceil(paginationLinksNum);
 console.log(paginationLinksNum);
 
 //Insert the required number of pagination links
-    //<div class="page"> is the parent we append the links to
+    //<div class="pagination">
 
 
     // <li>
@@ -35,3 +35,6 @@ console.log(paginationLinksNum);
     // <li>
     // <a href="#">5</a>
     // </li>
+
+const $linksDiv = $('div.pagination ul');
+$linksDiv.append('<li><a class="active" href="#">1</a></li>');
