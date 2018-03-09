@@ -36,26 +36,41 @@ for (let i=1; i<=paginationLinksNum; i++){
 }
 
 $linksDiv.append(paginationHTML);
+
+//on load, need to show up to 10 students only
+    //use slice()
+$students.hide();
+$students.slice(0,10).show();
+
 let linkClicked = "";
 
     //event handler to insert class of "active" on pagination link when cliked
-    //handler will be placed on parent, and event delegation (bubbling)
+    //handler will be placed on parent, and event delegation (a.k.a event bubbling)
 $linksDiv.on('click', 'a', function(){
 
-    removeActiveClassFromLinks();
+    if (!searchResultsModeFlag){
+        removeActiveClassFromLinks();
 
-    //now add class 'active' to the clicked link
-    $(this).addClass('active');
+        //now add class 'active' to the clicked link
+        $(this).addClass('active');
 
-    //grab the text of the link, to figure out what page to be displayed
-    linkClicked = $(this).text();
-        //Using this number
-    //hide all the students
-    $students.hide();
+        //grab the text of the link, to figure out what page to be displayed
+        linkClicked = $(this).text();
+            //Using this number
+        //hide all the students
+        $students.hide();
+
+        //logic for displaying only relevant student range in another function
+        displayRelevantStudents(linkClicked);
+
+        console.log("We are in default pagination mode...")
+    }else{
+        //we must now be in search mode, so only display relevant results and supply only required number of
+        //pagination links
+        console.log("We are in search mode...")
+    }
+
     
-
-    //logic for displaying only relevant student range in another function
-    displayRelevantStudents(linkClicked);
 
     
         
@@ -93,6 +108,9 @@ $pageHeaderDiv.append(searchBarHTML);
 
 //event handler to pageHeaderDiv
 $pageHeaderDiv.on('click', 'button', function(){
+    //set searchResultsFlag to true;
+    searchResultsModeFlag = true;
+
     //grab the input
     const $input = $(this).prev();
     console.log($(this).prev());
@@ -101,6 +119,7 @@ $pageHeaderDiv.on('click', 'button', function(){
     const $searchText = $input.val();
     console.log($input.val());
 
+    //call displayStudentsOnSearch function, with the inputted search text as the argument
     displayStudentsOnSearch($searchText);
 });
 
@@ -108,11 +127,18 @@ function displayStudentsOnSearch(searchText){
     //hide all students first
     $students.hide();
 
+    searchText = searchText.toLowerCase();
+
     //remove 'active' class from all links
     removeActiveClassFromLinks();
 
     //need to make this work
-    //$('li.student-item:contains("aapo")').show(); THIS WORKS TO SHOW AAPO, SO USE SAME LOGIC
+    const $results = $('li.student-item:contains('+ searchText +')');
+
+    $results.show(); //THIS WORKS TO SHOW AAPO, SO USE SAME LOGIC
+
+    const resultsNum = $results.length;
+    console.log(`There are ${resultsNum} result(s) based on the search criteria`);
 
 };
 
@@ -123,4 +149,9 @@ function removeActiveClassFromLinks(){
             .removeClass('active');
 })
 };
+
+//create bool to differentiate when in search results mode
+let searchResultsModeFlag = false;
+
+
 
