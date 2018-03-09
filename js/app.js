@@ -55,11 +55,39 @@ $linksDiv.on('click', 'a', function(){
     //grab the text of the link, to figure out what page to be displayed
     linkClicked = $(this).text();
         //Using this number
-
     //hide all the students
     $students.hide();
+    
+
+    //logic for displaying only relevant student range in another function
+    displayRelevantStudents(linkClicked);
+
+    
         
 });
 
-//slice(a,b) starts with a up until but not including b
+//slice(a,b) starts with a up until, but not including, b.
+    //given the link clicked, work out the range of students that this applies to
+    
+function displayRelevantStudents(linkClickedString){
+    console.log("displayRelevantFunction was called with number: " + linkClickedString);
+    let linkClickedNum = Number(linkClickedString);
+        //work out lower boundary and upper boundary
+        let lowerBoundary = (linkClickedNum * 10) - 10;
+        console.log(`Lower Boundary: ${lowerBoundary}`);
+        let upperBoundary = (linkClickedNum * 10);
+        console.log(`Upper Boundary: ${upperBoundary}`);
 
+        //display based on lower/upper boundary
+        $students.slice(lowerBoundary, upperBoundary).show();
+
+}
+
+
+
+
+//Search function
+// $('body').on('keypress', function(event){
+//     if (event.which == 13){
+//        console.log("enter key pressed")}
+//     })
