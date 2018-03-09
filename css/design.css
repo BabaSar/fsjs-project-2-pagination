@@ -112,6 +112,7 @@ body{
       color: #4ba6c3;
     }
 
+    /* When pagination link is active or hovered over, apply following styles */
     .pagination li a.active,
     .pagination li a:hover{
       background-color: #4ba6c3;
