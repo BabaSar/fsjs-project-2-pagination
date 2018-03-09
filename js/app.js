@@ -41,13 +41,8 @@ let linkClicked = "";
     //event handler to insert class of "active" on pagination link when cliked
     //handler will be placed on parent, and event delegation (bubbling)
 $linksDiv.on('click', 'a', function(){
-    $linksDiv.children().each(function(){
-        //remove the class 'active' that may have it already
-        $(this).children('a')
-            .removeClass('active');
 
-        console.log($(this).children('a'));
-    })
+    removeActiveClassFromLinks();
 
     //now add class 'active' to the clicked link
     $(this).addClass('active');
@@ -83,11 +78,48 @@ function displayRelevantStudents(linkClickedString){
 
 }
 
+//<div class="page-header cf"> is the parent element of the search bar, we can use this to append
+let searchBarHTML = `
+<div class="student-search">
+    <input placeholder="Search for students...">
+    <button>Search</button>
+</div>
+`;
 
+//grab the page header div
+$pageHeaderDiv = $('div.student-search');
+    //append the searchBar
+$pageHeaderDiv.append(searchBarHTML);
 
+//event handler to pageHeaderDiv
+$pageHeaderDiv.on('click', 'button', function(){
+    //grab the input
+    const $input = $(this).prev();
+    console.log($(this).prev());
 
-//Search function
-// $('body').on('keypress', function(event){
-//     if (event.which == 13){
-//        console.log("enter key pressed")}
-//     })
+    //get the .val from the input
+    const $searchText = $input.val();
+    console.log($input.val());
+
+    displayStudentsOnSearch($searchText);
+});
+
+function displayStudentsOnSearch(searchText){
+    //hide all students first
+    $students.hide();
+
+    //remove 'active' class from all links
+    removeActiveClassFromLinks();
+
+    //need to make this work
+
+};
+
+function removeActiveClassFromLinks(){
+    $linksDiv.children().each(function(){
+        //remove the class 'active' that may have it already
+        $(this).children('a')
+            .removeClass('active');
+})
+};
+
