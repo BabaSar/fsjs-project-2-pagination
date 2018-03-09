@@ -112,6 +112,7 @@ function displayStudentsOnSearch(searchText){
     removeActiveClassFromLinks();
 
     //need to make this work
+    //$('li.student-item:contains("aapo")').show(); THIS WORKS TO SHOW AAPO, SO USE SAME LOGIC
 
 };
 
