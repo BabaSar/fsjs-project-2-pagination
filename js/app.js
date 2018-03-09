@@ -93,7 +93,6 @@ function displayRelevantStudents(linkClickedString){
 
 }
 
-//<div class="page-header cf"> is the parent element of the search bar, we can use this to append
 let searchBarHTML = `
 <div class="student-search">
     <input placeholder="Search for students...">
@@ -132,10 +131,10 @@ function displayStudentsOnSearch(searchText){
     //remove 'active' class from all links
     removeActiveClassFromLinks();
 
-    //need to make this work
+    //search
     const $results = $('li.student-item:contains('+ searchText +')');
 
-    $results.show(); //THIS WORKS TO SHOW AAPO, SO USE SAME LOGIC
+    $results.show(); 
 
     const resultsNum = $results.length;
     console.log(`There are ${resultsNum} result(s) based on the search criteria`);
