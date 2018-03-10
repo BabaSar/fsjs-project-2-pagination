@@ -17,9 +17,11 @@ console.log(paginationLinksNum);
 
 //Insert the required number of pagination links
     //Grab the parent container where we want to append the pagination links
-const $linksDiv = $('div.pagination ul');
+    //<div class="page">
+const $pageDiv = $('div.page');
+//const $linksDiv = $('div.pagination ul');
     //iterate through and add links dynamically
-let paginationHTML = "";    
+let paginationHTML = '<div class="pagination"><ul class="pagination-ul">';    
 for (let i=1; i<=paginationLinksNum; i++){
     //insert a class of active to the first pagination link
     if(i==1){
@@ -34,8 +36,11 @@ for (let i=1; i<=paginationLinksNum; i++){
         `;  
     }
 }
+paginationHTML += '</ul></div>';
 
-$linksDiv.append(paginationHTML);
+const $paginationEl = $(paginationHTML);
+
+$pageDiv.append($paginationEl);
 
 //on load, need to show up to 10 students only
     //use slice()
@@ -46,31 +51,21 @@ let linkClicked = "";
 
     //event handler to insert class of "active" on pagination link when cliked
     //handler will be placed on parent, and event delegation (a.k.a event bubbling)
-$linksDiv.on('click', 'a', function(){
+$pageDiv.on('click', 'a', function(){
 
-    if (!searchResultsModeFlag){
-        removeActiveClassFromLinks();
+    removeActiveClassFromLinks();
 
-        //now add class 'active' to the clicked link
-        $(this).addClass('active');
+    //now add class 'active' to the clicked link
+    $(this).addClass('active');
 
-        //grab the text of the link, to figure out what page to be displayed
-        linkClicked = $(this).text();
-            //Using this number
+    //grab the text of the link, to figure out what page to be displayed
+    linkClicked = $(this).text();
+        //Using this number
         //hide all the students
-        $students.hide();
+    $students.hide();
 
-        //logic for displaying only relevant student range in another function
-        displayRelevantStudents(linkClicked);
-
-        console.log("We are in default pagination mode...")
-    }else{
-        //we must now be in search mode, so only display relevant results and supply only required number of
-        //pagination links
-        console.log("We are in search mode...")
-    }
-
-    
+    //display only relevant student range in another function
+    displayRelevantStudents(linkClicked);
 
     
         
@@ -94,9 +89,6 @@ function displayRelevantStudents(linkClickedString){
 }
 
 
-            
-
-
 let searchBarHTML = `
 <div class="student-search">
     <div class="student-search">
@@ -106,6 +98,7 @@ let searchBarHTML = `
 </div>
 `;
 
+
 //grab the page header div
 $pageHeaderDiv = $('div.page-header');
     //append the searchBar
@@ -113,8 +106,8 @@ $pageHeaderDiv.append(searchBarHTML);
 
 //event handler to pageHeaderDiv
 $pageHeaderDiv.on('click', 'button', function(){
-    //set searchResultsFlag to true;
-    searchResultsModeFlag = true;
+    //hide normal links
+    $paginationEl.hide();
 
     //grab the input
     const $input = $(this).prev();
@@ -145,18 +138,26 @@ function displayStudentsOnSearch(searchText){
     const resultsNum = $results.length;
     console.log(`There are ${resultsNum} result(s) based on the search criteria`);
 
+    //insert only required number of pagination links based on search results
+    let paginationLinksNum = (resultsNum/10);
+    paginationLinksNum = Math.ceil(paginationLinksNum);
+
+    console.log(`Based on search results, we require ${paginationLinksNum} new link(s)`);
+
 };
 
 function removeActiveClassFromLinks(){
-    $linksDiv.children().each(function(){
+    $('div.page:last-child li').each(function(){
         //remove the class 'active' that may have it already
         $(this).children('a')
             .removeClass('active');
 })
 };
 
-//create bool to differentiate when in search results mode
-let searchResultsModeFlag = false;
 
+function sayHello(){
+    console.log("Hey there!");
+}
 
+window.onload = sayHello;
 
