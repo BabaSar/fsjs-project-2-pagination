@@ -93,15 +93,21 @@ function displayRelevantStudents(linkClickedString){
 
 }
 
+
+            
+
+
 let searchBarHTML = `
 <div class="student-search">
-    <input placeholder="Search for students...">
-    <button>Search</button>
+    <div class="student-search">
+        <input placeholder="Search for students...">
+        <button>Search</button>
+    </div>
 </div>
 `;
 
 //grab the page header div
-$pageHeaderDiv = $('div.student-search');
+$pageHeaderDiv = $('div.page-header');
     //append the searchBar
 $pageHeaderDiv.append(searchBarHTML);
 
