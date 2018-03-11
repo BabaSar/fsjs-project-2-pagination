@@ -144,6 +144,15 @@ function displayStudentsOnSearch(searchText){
     const resultsNum = $searchResultsCollection.length;
     console.log(`There are ${resultsNum} result(s) based on the search criteria`);
 
+    if($searchResultsCollection.length == 0){
+        console.log("No results based on search criteria!");
+
+        // <li>
+        // <p>There are no results based on your search criteria!</p>
+        // </li>
+        displayNoResultsMessage();
+    }
+
     //insert only required number of pagination links based on search results
     let searchPaginationLinksNum =  determineNumberOfPages(resultsNum);
 
@@ -169,6 +178,31 @@ function displayStudentsOnSearch(searchText){
     displayFirstPage($searchResultsCollection);
 
 };
+
+function displayNoResultsMessage(){
+    console.log("the displayNoResultsMessage() function was called");
+    const $studentListUl =  $('ul.student-list');
+    
+    const noResultsMessageHTML = `<li class="noResultsMessage">
+    <p>There are no results based on your search criteria!</p>
+    </li>`;
+
+    const $noResultsMessageElement = $(noResultsMessageHTML);
+    
+    if ($('li.noResultsMessage').length){
+        $('li.noResultsMessage').remove();
+    }
+
+    $studentListUl.prepend($noResultsMessageElement);
+    setTimeout(function(){
+        $('.noResultsMessage').remove();
+    }
+    , 2000);
+
+    //Now remove the newly prepended element
+    //const $noResEl = $('li.noResultsMessage').remove();
+}
+
 
 function removeActiveClassFromLinks(){
     $('div.page li').each(function(){
