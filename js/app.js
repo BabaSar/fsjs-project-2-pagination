@@ -18,7 +18,7 @@ function determineNumberOfPages(numberOfStudents){
 
 //When the document content loads on start, then display first page of results to user
 document.addEventListener('DOMContentLoaded', function(){
-    displayFirstPage();
+    displayFirstPage($students);
 })
 
 let paginationLinksNum = determineNumberOfPages($studentsNum);
@@ -53,16 +53,23 @@ $pageDiv.append($paginationElement);
 
 //on load, need to show up to 10 students only
     //use slice()
-function displayFirstPage(){
-    $students.hide();
-    $students.slice(0,10).show();
-    //highlight first page - NEED TO BE ABLE TO HIGHLIGHT FIRST CHILD A TAG
-    const $paginationFirstPageButton = $('ul.pagination-ul:first-child a')[0];
-    $($paginationFirstPageButton).addClass('active');
-    console.log($paginationFirstPageButton);
+function displayFirstPage(collection){
+    collection.hide();
+    collection.slice(0,10).show();
+    if (collection === $students){
+        //highlight first page - NEED TO BE ABLE TO HIGHLIGHT FIRST CHILD A TAG
+        const $paginationFirstPageButton = $('ul.pagination-ul:first-child a')[0];
+        $($paginationFirstPageButton).addClass('active');
+        console.log($paginationFirstPageButton);
+    }
+    if (collection === $searchResultsCollection){
+        const $paginationFirstPageButton = $('ul.search-pagination-ul:first-child a')[0];
+        $($paginationFirstPageButton).addClass('active');
+        console.log($paginationFirstPageButton);
+    }
 }
     
-function displayCorrectPage(linkClickedString){
+function displayCorrectPage(linkClickedString, collection){
     console.log("displayRelevantFunction was called with number: " + linkClickedString);
     let linkClickedNum = Number(linkClickedString);
         //work out lower boundary and upper boundary
@@ -72,7 +79,7 @@ function displayCorrectPage(linkClickedString){
         console.log(`Upper Boundary: ${upperBoundary}`);
 
         //display based on lower/upper boundary
-        $students.slice(lowerBoundary, upperBoundary).show();
+        collection.slice(lowerBoundary, upperBoundary).show();
 
 }
 
@@ -108,7 +115,7 @@ $pageHeaderDiv.on('click', 'button', function(){
             console.log('need to get rid of redundant pagination element');
             $('div.pagination ul.search-pagination-ul').remove();
         }
-        displayFirstPage();
+        displayFirstPage($students);
     }else{
     //hide normal links i.e hide the normal pagination link buttons
     $paginationElement.hide();
@@ -118,6 +125,8 @@ $pageHeaderDiv.on('click', 'button', function(){
     }
     
 });
+
+let $searchResultsCollection;
 
 function displayStudentsOnSearch(searchText){
     //hide all students first
@@ -129,10 +138,10 @@ function displayStudentsOnSearch(searchText){
     removeActiveClassFromLinks();
 
     //search
-    const $results = $('li.student-item:contains('+ searchText +')');
-    $results.show(); 
+    $searchResultsCollection = $('li.student-item:contains('+ searchText +')');
+    $searchResultsCollection.show(); 
 
-    const resultsNum = $results.length;
+    const resultsNum = $searchResultsCollection.length;
     console.log(`There are ${resultsNum} result(s) based on the search criteria`);
 
     //insert only required number of pagination links based on search results
@@ -157,6 +166,7 @@ function displayStudentsOnSearch(searchText){
 
     //Now that we have the correct number of search-based pagination buttons displayed, we need to only show first 10
         //and only show correct pages based on click event
+    displayFirstPage($searchResultsCollection);
 
 };
 
@@ -169,12 +179,26 @@ function removeActiveClassFromLinks(){
 };
 
 
-//listen for when user clicks on search pagination anchor tag
+//listen for when user clicks on a pagination anchor tag
 $pageDiv.on('click', 'a', function(event){
     let $target = $(event.target);
 
     if($target.parent().parent().hasClass('search-pagination-ul')){
+        let linkClicked = "";
+        linkClicked = $(this).text();
+
         console.log('You clicked on non-default button');
+        //remove class of Active on other buttons
+        removeActiveClassFromLinks();
+        //assign class of active to button that was clicked
+        $(this).addClass('active');
+
+        //hide all students currently on page
+        $searchResultsCollection.hide();
+
+        //display the correct page based on number of button that was clicked
+        displayCorrectPage(linkClicked, $searchResultsCollection);
+
     }
 
     if($target.parent().parent().hasClass('pagination-ul')){
@@ -192,7 +216,7 @@ $pageDiv.on('click', 'a', function(event){
         $students.hide();
 
         //display only relevant students depending on which page link is clicked
-        displayCorrectPage(linkClicked);
+        displayCorrectPage(linkClicked, $students);
     }
 })
 
